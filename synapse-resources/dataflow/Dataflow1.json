@@ -1,0 +1,32 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "NBAData",
+						"type": "DatasetReference"
+					},
+					"name": "NBADAta"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DerivedColumn1"
+				}
+			],
+			"script": "source(output(\n\t\tRk as short,\n\t\tPlayer as string,\n\t\tPos as string,\n\t\tAge as short,\n\t\tTm as string,\n\t\tG as short,\n\t\tGS as short,\n\t\tMP as double,\n\t\tFG as double,\n\t\tFGA as double,\n\t\t{FG%} as double,\n\t\t{3P} as double,\n\t\t{3PA} as double,\n\t\t{3P%} as double,\n\t\t{2P} as double,\n\t\t{2PA} as double,\n\t\t{2P%} as double,\n\t\t{eFG%} as double,\n\t\tFT as double,\n\t\tFTA as double,\n\t\t{FT%} as double,\n\t\tORB as double,\n\t\tDRB as double,\n\t\tTRB as double,\n\t\tAST as double,\n\t\tSTL as double,\n\t\tBLK as double,\n\t\tTOV as double,\n\t\tPF as double,\n\t\tPTS as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> NBADAta\nNBADAta derive(test = 'a column') ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}
